@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class MailConstancia extends Mailable implements ShouldQueue
+class MailConstancia extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -22,7 +22,7 @@ class MailConstancia extends Mailable implements ShouldQueue
 
     public function build()
     {
-        $mailable = $this->from('example@example.com')->view('emails.constancia')->with('Envio de Constancia', $this->user)->subject('Fifco')->attach($this->archive);
+        $mailable = $this->from('fifcoone@fifco.com')->view('emails.constancia')->with('Envio de Constancia', $this->user)->subject('Fifco')->attach($this->archive);
         return $mailable;
     }
 }

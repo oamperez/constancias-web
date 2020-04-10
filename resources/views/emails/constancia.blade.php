@@ -7,6 +7,6 @@
     <title>Document</title>
 </head>
 <body>
-<h1>{{ $user }}</h1>
+<h1>{{ $user['NOMBRE'] }}, te hemos enviado tu constancias.</h1>
 </body>
 </html>

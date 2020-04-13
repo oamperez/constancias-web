@@ -30,13 +30,18 @@ class FileEmail extends Command
         foreach($files as $f){
             $ext = pathinfo($f);
             if(strtolower($ext['extension']) == 'pdf'){
-                $res = Http::get('http://fifcoone.saprosa.co/ws/sap/data/showmember?empid='.$ext['filename']);
+                $res = Http::get('http://fifcoone.saprosa.co/ws/sap/data/showmember?user='.$ext['filename']);
                 $json = $res->json();
                 if($json['result']){
                     if(!Storage::disk('constancias')->exists($ext['basename'])){
                         $ruta = $ext['dirname'].'/'.$ext['basename'];
                         $path = Storage::disk('constancias')->putFileAs('/', $ruta , $ext['basename']);
-                        Mail::to($json['records']['UID'])->send(new MailConstancia($json['records'],$ruta));
+                        //Mail::to($json['records']['UID'])->send(new MailConstancia($json['records'],$ruta));
+                        $res2 = Http::get('http://fifcoone.saprosa.co/ws/sap/data/showmember?user='.$json['records']['JEFENO']);
+                        $json2 = $res2->json();
+                        if($json2['result']){
+                            Mail::to($json2['records']['UID'])->send(new MailConstancia($json['records'],$ruta));
+                        }
                         $collect->push($ext);
                     }
                 }

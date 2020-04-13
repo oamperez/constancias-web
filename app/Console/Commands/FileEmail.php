@@ -25,18 +25,18 @@ class FileEmail extends Command
     public function handle()
     {
         $collect = collect();
-        // $files = Storage::disk('s3')->files('constancias');
-        $files = File::files(public_path('send'));
+        $files = Storage::disk('s3')->files('constancias');
+        //$files = File::files(public_path('send'));
         foreach($files as $f){
             $ext = pathinfo($f);
             if(strtolower($ext['extension']) == 'pdf'){
-                $res = Http::get('http://fifcoone.saprosa.co/ws/sap/data/showmember?user='.$ext['filename']);
+                $res = Http::get('http://fifcoone.saprosa.co/ws/sap/data/showmember?empid='.$ext['filename']);
                 $json = $res->json();
                 if($json['result']){
-                    if(!Storage::disk('constancias')->exists(date('Y-m-d') . '/' . $ext['basename'])){
+                    if(!Storage::disk('constancias')->exists($ext['basename'])){
                         $ruta = $ext['dirname'].'/'.$ext['basename'];
-                        $path = Storage::disk('constancias')->putFileAs(date('Y-m-d'), $ruta , $ext['basename']);
-                        Mail::to($ext['filename'])->send(new MailConstancia($json['records'],$ruta));
+                        $path = Storage::disk('constancias')->putFileAs('/', $ruta , $ext['basename']);
+                        Mail::to($json['records']['UID'])->send(new MailConstancia($json['records'],$ruta));
                         $collect->push($ext);
                     }
                 }
